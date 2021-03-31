@@ -10,4 +10,8 @@ public abstract class Player
 		this.name=name;
 		this.state=true;
 	}
+	public String getName()
+	{
+		return name;
+	}
 }
