@@ -1,3 +1,4 @@
+
 public class Mafia extends Player{
 
 	public boolean godfather;
