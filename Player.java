@@ -14,4 +14,8 @@ public abstract class Player
 	{
 		return name;
 	}
+	public String vote(String votee)
+	{
+		return votee;
+	}
 }
