@@ -246,7 +246,7 @@ public class Game2{
 		String voter=null;
 		String votee=null;
 		int max_vote=0;
-		int maxnum=1;
+		int maxnum=0;
 		String suspected=null;
 		boolean is_sus_mafia=false;
 		for(int n=0;n<alives;++n)
@@ -349,7 +349,7 @@ public class Game2{
 							x++;
 						}
 					}
-					else if (votee_role.equals("mafai") || votee_role.equals("silencer") || votee_role.equals("godfather"))
+					else if (votee_role.equals("mafia") || votee_role.equals("silencer") || votee_role.equals("godfather"))
 					{
 						int votee_index=findPlayer(votee,initial_mafias,numberOfMafias);
 						if(initial_mafias[votee_index].state==false)
@@ -498,22 +498,23 @@ public class Game2{
 				if(doer_role.equals("villager") || doer_role.equals("joker"))
 				{
 					System.out.println("the user is not awake during the night!");
-					check++;
 				}
 				else if((doer_role.equals("doctor") || doer_role.equals("detective")) && initial_villager[findPlayer(doer,initial_villager,numberOfVillagers)].state==false)
 				{
 					System.out.println("the user is dead!");
-					check++;
 				}
 				else if(doer_role.equals("mafia") && initial_mafias[doer_index].state==false)
 				{
 					System.out.println("the user is dead!");
+				}
+				else
+				{
 					check++;
 				}
 			}
 			//done is ok
 			int check2=0;
-			while(check2==2)
+			while(check2==0)
 			{	done=scan.next();
 				String done_role=playerRole(done,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
 				int done_index=findPlayer(done,initial_villager,numberOfVillagers);
@@ -521,7 +522,7 @@ public class Game2{
 				{
 					System.out.println("user did not join!");
 				}
-				else if(initial_villager[done_index].state==false)
+				else if(done_role.equals("villager") && initial_villager[done_index].state==false)
 				{
 					System.out.println("votee is already dead!");
 				}
@@ -544,7 +545,7 @@ public class Game2{
 				}
 				else if(doer_role.equals("silencer"))
 				{
-					if(got_silenced==null)
+					if(got_silenced.equals(""))
 					{
 						got_silenced=done;
 					}
@@ -557,6 +558,7 @@ public class Game2{
 				else 
 				{
 					initial_mafias[doer_index].votee=done;
+					check2++;
 				}
 			}
 			
@@ -564,52 +566,67 @@ public class Game2{
 		//lets assume every body voted
 		int max_mafias_votes=0;
 		int number_of_maxvotes=0;
-		String max_mafias_name=null;
+		String max_mafias_name="";
 		for (int i=0;i<numberOfMafias;i++)
 		{
 			if(initial_mafias[i].votee!=null)
 			{
-				int j2=findPlayer(initial_mafias[i].votee,initial_villager,numberOfVillagers);
-				initial_villager[j2].votes++;
-				if(initial_villager[j2].votes>max_mafias_votes)
+				String vrole=playerRole(initial_mafias[i].votee,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
+				if(vrole.equals("villager"))
 				{
-					number_of_maxvotes=1;
-	
-					max_mafias_votes=initial_villager[j2].votes;
-					max_mafias_name=initial_mafias[i].votee;
+					int indexv=findPlayer(initial_mafias[i].votee,initial_villager,numberOfVillagers);
+					initial_villager[indexv].votes++;
+					if(initial_villager[indexv].votes>max_mafias_votes)
+					{
+						max_mafias_name=initial_villager[indexv].getName();
+						max_mafias_votes=initial_villager[indexv].votes;
+						number_of_maxvotes=1;
+					}
+					else if(initial_villager[indexv].votes==max_mafias_votes)
+					{
+						number_of_maxvotes++;
+					}
 				}
-				else if(initial_villager[j2].votes==max_mafias_votes)
+				else if(vrole.equals("joker"))
 				{
-					number_of_maxvotes++;
+					joker.votes++;
+					if(joker.votes>max_mafias_votes)
+					{
+						max_mafias_name=joker.getName();
+						max_mafias_votes=joker.votes;
+						number_of_maxvotes=1;
+					}
+					else if (joker.votes==max_mafias_votes) {
+						number_of_maxvotes++;
+					}
 				}
-
 			}
 		}
 			//lets see who gets killed
 
 			if(number_of_maxvotes>1)
 			{
-				System.out.println("mafias tried to kill"+number_of_maxvotes+"players,but could't");
+				System.out.println("mafias tried to kill "+number_of_maxvotes+" players,but could't");
 			}
 			else
 			{
 				if(initial_villager[findPlayer(max_mafias_name,initial_villager,numberOfVillagers)].bulletproof && initial_villager[findPlayer(max_mafias_name,initial_villager,numberOfVillagers)].shot==0)
 				{
 					initial_villager[findPlayer(max_mafias_name,initial_villager,numberOfVillagers)].shot=1;
-					System.out.println("mafias tried to kill"+max_mafias_name+"but couldn't");
+					System.out.println("mafias tried to kill "+max_mafias_name+"but couldn't");
 				}
 				else if(max_mafias_name.equals(saved))
 				{
-					System.out.println("mafias tried to kill"+max_mafias_name+"but doctor saved them!");
+					System.out.println("mafias tried to kill "+max_mafias_name+"but doctor saved them!");
 				}
 				else 
 				{
-					System.out.println("mafias killed"+max_mafias_name);
+					System.out.println("mafias killed "+max_mafias_name);
 					initial_villager[findPlayer(max_mafias_name,initial_villager,numberOfVillagers)].state=false;
 					alives--;
 					numberOfVillagers_alive--;
 				}
-				if(got_silenced!=null)
+				if(got_silenced.equals("")==false)
 				{
 					System.out.println(got_silenced+"is silenced!");
 				}
