@@ -42,10 +42,10 @@ public class Play{
 			game.dayPhase();
 			if(game.game_state)
 			{
-				String endDay=nextLine();
+				String endDay=scan.nextLine();
 				while(endDay.equals("end_vote"))
 				{
-					endDay=nextLine();
+					endDay=scan.nextLine();
 				}
 
 				game.nightPhase();

@@ -261,11 +261,11 @@ public class Game2{
 			while(p==0)
 			{
 				voter=scan.next();
+				String voter_role=playerRole(voter,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
 				if(voter.equals("get_game_state"))
 				{
 					getGameState();
 				}
-				String voter_role=playerRole(voter,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
 				else if(voter_role.equals("user not found"))
 				{
 					System.out.println("user not found");
@@ -327,11 +327,11 @@ public class Game2{
 			while(x==0)
 			{
 				votee=scan.next();
+				String votee_role=playerRole(votee,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
 				if(votee.equals("get_game_state"))
 				{
 					getGameState();
 				}
-				String votee_role=playerRole(votee,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
 				else if(votee_role.equals("user not found"))
 				{
 					System.out.println("user not found");
@@ -496,27 +496,28 @@ public class Game2{
 			}
 
 		}
-		System.out.println(nighters);
 		String doer=null;
 		String done=null;
-		int check=0;
 		String doer_role=null;
 		int doer_index=0;
 		int nightends=0;
-		while (nightends==0){
+		endnightwhile:while (true){
 			//doer is ok
+			int check=0;
 			while(check==0){
 				doer=scan.next();
+				doer_role=playerRole(doer,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
+				doer_index=findPlayer(doer,initial_mafias,numberOfMafias);
 				if(doer.equals("get_game_state"))
 				{
 					getGameState();
 				}
 				else if(doer.equals("end_night"))
 				{
-					nightends++;
+					//nightends++;
+					break endnightwhile;
 				}
-				doer_role=playerRole(doer,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
-				doer_index=findPlayer(doer,initial_mafias,numberOfMafias);
+
 				else if(doer_role.equals("villager") || doer_role.equals("joker"))
 				{
 					System.out.println("the user is not awake during the night!");
@@ -534,18 +535,17 @@ public class Game2{
 					check++;
 				}
 			}
-			if(nightends!=0)
-				break;
 			//done is ok
 			int check2=0;
 			while(check2==0)
 			{	done=scan.next();
+				String done_role=playerRole(done,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
+				int done_index=findPlayer(done,initial_villager,numberOfVillagers);
 				if(done.equals("get_game_state"))
 				{
 					getGameState();
 				}
-				String done_role=playerRole(done,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
-				int done_index=findPlayer(done,initial_villager,numberOfVillagers);
+
 				else if(done_role.equals("user not found"))
 				{
 					System.out.println("user did not join!");
@@ -641,11 +641,11 @@ public class Game2{
 				if(initial_villager[findPlayer(max_mafias_name,initial_villager,numberOfVillagers)].bulletproof && initial_villager[findPlayer(max_mafias_name,initial_villager,numberOfVillagers)].shot==0)
 				{
 					initial_villager[findPlayer(max_mafias_name,initial_villager,numberOfVillagers)].shot=1;
-					System.out.println("mafias tried to kill "+max_mafias_name+"but couldn't");
+					System.out.println("mafias tried to kill "+max_mafias_name+" but couldn't");
 				}
 				else if(max_mafias_name.equals(saved))
 				{
-					System.out.println("mafias tried to kill "+max_mafias_name+"but doctor saved them!");
+					System.out.println("mafias tried to kill "+max_mafias_name+" but doctor saved them!");
 				}
 				else 
 				{
@@ -656,7 +656,7 @@ public class Game2{
 				}
 				if(got_silenced.equals("")==false)
 				{
-					System.out.println(got_silenced+"is silenced!");
+					System.out.println(got_silenced+" is silenced!");
 				}
 			}
 		//null kardan votee barye round jadid
