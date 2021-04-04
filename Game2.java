@@ -45,6 +45,11 @@ public class Game2{
 		}
 		return index;
 	}
+	public void getGameState()
+	{
+		System.out.println("Mafias = "+numberOfMafias_alive);
+		System.out.println("Villagers = "+numberOfVillagers_alive);
+	}
 	public static String playerRole(String name,Mafia[] mafias,Villager[] villagers,int numMafias,int numVillagers,Joker joker)
 	{
 		for(int i=0;i<numMafias;i++)
@@ -256,8 +261,12 @@ public class Game2{
 			while(p==0)
 			{
 				voter=scan.next();
+				if(voter.equals("get_game_state"))
+				{
+					getGameState();
+				}
 				String voter_role=playerRole(voter,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
-				if(voter_role.equals("user not found"))
+				else if(voter_role.equals("user not found"))
 				{
 					System.out.println("user not found");
 				}
@@ -318,8 +327,12 @@ public class Game2{
 			while(x==0)
 			{
 				votee=scan.next();
+				if(votee.equals("get_game_state"))
+				{
+					getGameState();
+				}
 				String votee_role=playerRole(votee,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
-				if(votee_role.equals("user not found"))
+				else if(votee_role.equals("user not found"))
 				{
 					System.out.println("user not found");
 				}
@@ -489,13 +502,22 @@ public class Game2{
 		int check=0;
 		String doer_role=null;
 		int doer_index=0;
-		for (int n=0;n<nighters;++n){
+		int nightends=0;
+		while (nightends==0){
 			//doer is ok
 			while(check==0){
 				doer=scan.next();
+				if(doer.equals("get_game_state"))
+				{
+					getGameState();
+				}
+				else if(doer.equals("end_night"))
+				{
+					nightends++;
+				}
 				doer_role=playerRole(doer,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
 				doer_index=findPlayer(doer,initial_mafias,numberOfMafias);
-				if(doer_role.equals("villager") || doer_role.equals("joker"))
+				else if(doer_role.equals("villager") || doer_role.equals("joker"))
 				{
 					System.out.println("the user is not awake during the night!");
 				}
@@ -512,13 +534,19 @@ public class Game2{
 					check++;
 				}
 			}
+			if(nightends!=0)
+				break;
 			//done is ok
 			int check2=0;
 			while(check2==0)
 			{	done=scan.next();
+				if(done.equals("get_game_state"))
+				{
+					getGameState();
+				}
 				String done_role=playerRole(done,initial_mafias,initial_villager,numberOfMafias,numberOfVillagers,joker);
 				int done_index=findPlayer(done,initial_villager,numberOfVillagers);
-				if(done_role.equals("user not found"))
+				else if(done_role.equals("user not found"))
 				{
 					System.out.println("user did not join!");
 				}

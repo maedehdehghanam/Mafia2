@@ -29,18 +29,25 @@ public class Play{
 		//giviving roles!
 		game.givingRoles();
 		//
-		System.out.println("Well done!Whenever you were ready to start the game type'start_game'.");
 		String starting_game2=scan.nextLine();
 		while(starting_game2.equals("start_game")==false)
 		{
+			System.out.println("Well done!Whenever you were ready to start the game type'start_game'.");
 			starting_game2=scan.nextLine();
 		}
+		System.out.println("Thanks for using this program to play:)\nhere are some infos to help you play easier!\n1)after Daytime voting inorder to start night time type(end_vote)\n2)You can be informed of game's state by typing(get_game_state)\n3)the nightvoting continues untill you type(end_night)\n HAVE FUN! ");
 		game.rolesCheck();
 		while(game.game_state)
 		{
 			game.dayPhase();
 			if(game.game_state)
 			{
+				String endDay=nextLine();
+				while(endDay.equals("end_vote"))
+				{
+					endDay=nextLine();
+				}
+
 				game.nightPhase();
 			}
 		}
